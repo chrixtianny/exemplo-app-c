@@ -18,6 +18,24 @@ typedef struct
     Endereco *endereco;
 } Aluno;
 
+typedef struct
+{
+    char matricula[10];
+    char cpf[12];
+    char nome[50];
+    Endereco *endereco;
+} Professor;
+
+typedef struct
+{
+    char codigo[6];
+    char nome_disciplina[50];
+    Professor *professor;
+    char *lista_alunos;
+    char media_turma;
+} Turma;
+
+
 Endereco *criarEndereco(char *logradouro,
                         char *bairro,
                         char *cidade,
@@ -29,7 +47,12 @@ Aluno *criarAluno(char *matricula,
                   char *nome,
                   Endereco *end);
 
+Professor *criarProfessor(char *matricula,
+                          char *cpf,
+                          char *nome);
+
 void destruirAluno(Aluno *aluno);
 void destruirEndereco(Endereco *);
+void destruirProfessor(Professor *);
 
 #endif
