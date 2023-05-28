@@ -164,6 +164,8 @@ void imprimir_endereco(Endereco *endereco)
     printf("Estado: %s", endereco->estado);
 }
 
+//professores 
+
 Professor *construir_professor()
 {
     Professor professor;
@@ -187,8 +189,7 @@ Professor *buscar_professor(Professor **professores, int *posicao)
     int pos_resultado = -1;
     for (int i = 0; i < MAX_PROFESSOR; i++)
     {
-        // Vamos testar se o professor existe e se a matricula e a buscada
-        // strcmp compara strings. Se for 0 indica que são iguais
+
         if (professores[i] && !strcmp(matricula, professores[i]->matricula))
         {
             resultado = professores[i];
@@ -219,13 +220,11 @@ void tratador_menu_prof(Professor **professores, int *qtd_atual_prof){
         }
         else
         {
-            // Passo 1: buscar posicao disponível
             int i = 0;
             for (; i < *qtd_atual_prof; i++)
             {
                 if (professores[i] != NULL)
                 {
-                    // significa que esta posição está livre para uso
                     break;
                 }
             }
@@ -296,3 +295,162 @@ void tratador_menu_prof(Professor **professores, int *qtd_atual_prof){
 
 }
 }
+
+//turmas
+Turma *construir_turma()
+{
+    Turma turma;
+    printf("Código\t> ");
+    fgets(turma.codigo, 9, stdin);
+    printf("Nome da disciplina\t> ");
+    fgets(turma.nome_disciplina, 49, stdin);
+    printf("Matricula do professor\t> ");
+    fgets(turma.matriculaProf, 9, stdin);
+    printf("Lista de Alunos\t> ");
+    fgets(turma.lista_alunos, 49, stdin);
+    printf("Media da turma\t> ");
+    fgets(turma.media_turma, 49, stdin);
+
+
+    void buscarProfessorPorMatricula(Professor **professores, int qtd_atual_prof, char matriculaProf)
+{   
+        for (int i = 0; i < qtd_atual_prof; i++)
+    {
+        if (strcmp(professores[i]->matricula, matricula) == 0)
+        {
+            char nomeProfTurma = professores[i]->nome;
+            return nomeProfTurma;
+        }
+    }
+
+    return NULL;
+
+    }
+    
+    return criarTurma(turma.codigo, turma.nome_disciplina, professor, turma.lista_alunos, turma.media_turma);
+}
+
+void imprimir_turma(Turma *turma, char nomeProfTurma)
+{
+    printf("Código: %s", turma->codigo);
+    printf("Nome da disciplina: %s", turma->nome_disciplina);
+    printf("Professor: %s", nomeProfTurma);
+    printf("Lista de Alunos: %s", turma->lista_alunos);
+    printf("Média da turma: %s", turma->media_turma);
+}
+
+Turma  *buscar_turma(Turma **turmas, int *posicao) {
+    char codigo[50];
+    printf("Código > ");
+    fgets(codigo, 49, stdin);
+    Turma *resultado = NULL;
+    int pos_resultado = -1;
+    for (int i = 0; i < MAX_TURMA; i++)
+    {
+
+        if (turmas[i] && !strcmp(codigo, turmas[i]->codigo))
+        {
+            resultado = turmas[i];
+            break;
+        }
+    }
+    *posicao = pos_resultado;
+    return resultado;
+}
+
+void tratador_menu_turma(Turma **turmas, int *qtd_atual_turma, Professor **professores, int *qtd_atual_prof)
+{
+    int opcao = menu_crud_turma();
+    Turma *turma = NULL;
+    switch (opcao)
+    {
+    case 1:
+    //criar
+        if (*qtd_atual_turma >= MAX_TURMA)
+        {
+            printf("Número máximo de turmas atingido\n");
+        }
+        else
+        {
+            int i = 0;
+            for (; i < *qtd_atual_turma; i++)
+            {
+                if (turmas[i] != NULL)
+                {
+                    break;
+                }
+            }
+            Turma *turma = construir_turma();
+            turmas[i] = turma;
+            (*qtd_atual_turma)++;
+        }
+        break;
+    case 2:
+    //buscar
+    {
+        int posicao = 0;
+        turma = buscar_turma(turmas, &posicao);
+        if (turma)
+        {
+            imprimir_turma(turma, nomeProfTurma);
+        }
+        else
+        {
+            printf("Turma nao encontrada!!\n");
+        }
+    }
+    break;
+    case 3:
+    //atualizar
+    {
+        int posicao = 0;
+        turma = buscar_turma(turmas, &posicao);
+
+        if (turma)
+        {
+            imprimir_turma(turma, &nomeProfTurma);
+            printf("Atualizar turma\n");
+            printf("Novo Código\t> ");
+            fgets(turma->codigo, 9, stdin);
+            printf("Nova Disciplina\t> ");
+            fgets(turma->nome_disciplina, 49, stdin);
+            printf("Novo Professor\t> ");
+            fgets(turma->matriculaProf, 49, stdin);
+            printf("Nova Lista de Alunos\t> ");
+            fgets(turma->lista_alunos, 49, stdin);
+            printf("Nova Média da turma\t> ");
+            fgets(turma->media_turma, 49, stdin);
+            printf("Turma atualizada!\n");
+        }
+        else
+        {
+            printf("Turma nao encontrada!!\n");
+        }
+        
+    }
+
+    break;
+    case 4:
+    {
+        int posicao = 0;
+        turma = buscar_turma(turmas, &posicao);
+        if (turma)
+        {
+            destruirTurma(turma);
+            turmas[posicao] = NULL;
+            printf("Turma destruida\n");
+        }
+        else
+        {
+}
+    }
+    break;
+    default:
+        printf("Retorno ao menu principal\n");
+
+    }
+
+}
+
+//estatísticas
+
